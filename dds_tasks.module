@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * Implementing hook_cron
+ */
+function dds_tasks_cron() {
+  $task_manager = \Drupal::service('tasks.manager');
+  $task_manager->run();
+}
+
+/**
+ * Cache the tasks next run
+ */
+function dds_tasks_rebuild() {
+  /** @var \Drupal\dds_tasks\TaskPluginManager $task_plugin_manager */
+  $task_plugin_manager = \Drupal::service('plugin.manager.tasks');
+  $task_plugin_manager->setCachedTasks();
+}

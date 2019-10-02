@@ -1,0 +1,15 @@
+services:
+  cache.tasks:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [tasks]
+
+  plugin.manager.tasks:
+    class: Drupal\dds_tasks\TaskPluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler','@cache.tasks']
+
+  tasks.manager:
+    class: Drupal\dds_tasks\TaskManager
+    arguments: ['@plugin.manager.tasks','@state','@event_dispatcher']

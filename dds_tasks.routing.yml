@@ -1,0 +1,15 @@
+dds_tasks.collection:
+  path: '/admin/config/system/cron/tasks'
+  defaults:
+    _controller: Drupal\dds_tasks\Controller\TasksController::collection
+    _title: 'Tasks'
+  requirements:
+    _permission: 'administer site configuration'
+
+dds_tasks.run_task:
+  path: '/admin/config/system/cron/tasks/{task}/run'
+  defaults:
+    _controller: Drupal\dds_tasks\Controller\TasksController::runTaskAsBatch
+    _title: 'Run Tasks'
+  requirements:
+    _permission: 'administer site configuration'

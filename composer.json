@@ -1,0 +1,11 @@
+{
+  "name": "novicell/dds_tasks",
+  "type": "drupal-module",
+  "description": "Novicell DDS Tasks",
+  "keywords": [
+    "Novicell"
+  ],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.novicell.dk",
+  "minimum-stability": "dev"
+}

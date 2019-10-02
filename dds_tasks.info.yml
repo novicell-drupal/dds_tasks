@@ -1,0 +1,6 @@
+name: DDS Tasks
+description: Scheduling Cron tasks
+type: module
+version: VERSION
+core: 8.x
+package: Drupal Design Suite
