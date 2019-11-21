@@ -95,7 +95,7 @@ class TaskManager {
    */
   protected function schedule($task_id) {
     $definition = $this->taskPluginManager->getDefinition($task_id);
-    $interval = stripslashes($definition[‘interval’]);
+    $interval = stripslashes($definition['interval']);
     if (!empty($interval)) {
       $cron = CronExpression::factory($interval);
       $this->taskPluginManager->setCacheItem(
