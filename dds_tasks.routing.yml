@@ -9,7 +9,7 @@ dds_tasks.collection:
 dds_tasks.run_task:
   path: '/admin/config/system/cron/tasks/{task}/run'
   defaults:
-    _controller: Drupal\dds_tasks\Controller\TasksController::runTaskAsBatch
+    _controller: Drupal\dds_tasks\Controller\TasksController::runTask
     _title: 'Run Tasks'
   requirements:
     _permission: 'administer site configuration'

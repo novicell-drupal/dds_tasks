@@ -90,12 +90,21 @@ class TasksController extends ControllerBase {
     return [];
   }
 
-  public static function runTask($task_id, &$context) {
+  public static function runTask($task) {
+    $return_url = Url::fromRoute('dds_tasks.collection')->toString();
     try {
-      $task = \Drupal::service('plugin.manager.tasks')->createInstance($task_id);
-      $task->run();
-    } catch (Exception $e) {
+      /** @var \Drupal\dds_tasks\TaskInterface $task */
+      $task_plugin = \Drupal::service('plugin.manager.tasks')->createInstance($task);
+      $task_plugin->run();
+
+      \Drupal::messenger()->addMessage('The task ' . $task . ' was successfully run.');
+      return new RedirectResponse(return_url);
+    }
+    catch (Exception $e) {
+      \Drupal::messenger()->addError('The task ' . $task . ' failed while trying to run.');
       \Drupal::logger('dds_tasks')->error($e->getMessage());
+      return new RedirectResponse(return_url);
     }
   }
+
 }
