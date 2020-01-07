@@ -49,15 +49,16 @@ class TaskManager {
           try {
             if ($this->runTask($task_id)) {
               $this->schedule($task_id);
-              error_log('Running');
-              // Set state for last run
+              error_log('Running task with ID: ' . $task_id);
+              // Set state for last run.
               $this->state->set(
                 'tasks.task_' . $task_id . '.last_run', $this->request_time
               );
             }
-          } catch (\Exception $e) {
+          }
+          catch (\Exception $e) {
             error_log($e->getMessage());
-            \Drupal::logger('dds_tasks')
+            Drupal::logger('dds_tasks')
               ->error(
                 'Could\'nt run task with id "' . $task_id . '" '
                 . $e->getMessage()
@@ -89,9 +90,11 @@ class TaskManager {
   }
 
   /**
-   * Schedule a cron task by settings
+   * Schedule a cron task by settings.
    *
    * @param $task_id
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function schedule($task_id) {
     $definition = $this->taskPluginManager->getDefinition($task_id);
@@ -100,11 +103,16 @@ class TaskManager {
       $cron = CronExpression::factory($interval);
       $this->taskPluginManager->setCacheItem(
         $task_id, $cron->getNextRunDate()
-        ->getTimestamp()
+          ->getTimestamp()
       );
     }
   }
 
+  /**
+   * @param $id
+   * @param \Drupal\dds_tasks\TaskInterface $task
+   * @param $event
+   */
   protected function setTaskStatus($id, TaskInterface $task, $event) {
     $key = 'tasks.task_' . $id . '.state';
     $message = '';
@@ -113,9 +121,11 @@ class TaskManager {
       case TaskEvents::RUNNING:
         $message = 'Running';
         break;
+
       case TaskEvents::FINISHED:
         $message = 'Finished';
         break;
+
       case TaskEvents::ERROR:
         $message = 'Error occurred';
         break;
@@ -124,4 +134,5 @@ class TaskManager {
     $this->eventDispatcher->dispatch($event, new TaskEvent($id, $task));
     $this->state->set($key, $message);
   }
+
 }
