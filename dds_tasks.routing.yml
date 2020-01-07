@@ -1,8 +1,8 @@
 dds_tasks.collection:
-  path: '/admin/config/system/cron/tasks'
+  path: '/admin/config/dds/tasks'
   defaults:
     _controller: Drupal\dds_tasks\Controller\TasksController::collection
-    _title: 'Tasks'
+    _title: 'Cron Tasks Overview'
   requirements:
     _permission: 'administer site configuration'
 
