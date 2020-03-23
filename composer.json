@@ -9,6 +9,6 @@
   "homepage": "https://www.novicell.dk",
   "minimum-stability": "dev",
   "require": {
-    "mtdowling/cron-expression": "^1.2",
+    "mtdowling/cron-expression": "^1.2"
   }
 }
