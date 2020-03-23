@@ -2,14 +2,17 @@
 
 namespace Drupal\dds_tasks\Controller;
 
+use Drupal;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Link;
 use Drupal\Core\State\State;
+use Drupal\Core\Url;
 use Drupal\dds_tasks\TaskPluginManager;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TasksController extends ControllerBase {
 
@@ -90,12 +93,21 @@ class TasksController extends ControllerBase {
     return [];
   }
 
-  public static function runTask($task_id, &$context) {
+  public static function runTask($task) {
+    $return_url = Url::fromRoute('dds_tasks.collection')->toString();
     try {
-      $task = \Drupal::service('plugin.manager.tasks')->createInstance($task_id);
-      $task->run();
-    } catch (Exception $e) {
-      \Drupal::logger('dds_tasks')->error($e->getMessage());
+      /** @var \Drupal\dds_tasks\TaskInterface $task_plugin */
+      $task_plugin = \Drupal::service('plugin.manager.tasks')->createInstance($task);
+      $task_plugin->run();
+
+      Drupal::messenger()->addMessage('The task ' . $task . ' was successfully run.');
     }
+    catch (Exception $e) {
+      Drupal::messenger()->addError('The task failed while trying to run, with msg: ' . $e->getMessage());
+      Drupal::logger('dds_tasks')->error($e->getMessage());
+    }
+
+    return new RedirectResponse($return_url);
   }
+
 }

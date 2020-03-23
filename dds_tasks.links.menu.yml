@@ -1,0 +1,5 @@
+dds_tasks.list:
+  title: 'Cron Task Overview'
+  route_name: dds_tasks.collection
+  description: 'A list of Tasks registered on the site.'
+  parent: dds.config

@@ -4,5 +4,4 @@ type: module
 version: VERSION
 core: 8.x
 package: Drupal Design Suite
-
-core_version_requirement: ^8.7 || ^9
+core_version_requirement: ^8 || ^9
