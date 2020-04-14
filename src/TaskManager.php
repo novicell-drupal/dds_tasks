@@ -51,9 +51,10 @@ class TaskManager {
               $this->schedule($task_id);
               error_log('Running task with ID: ' . $task_id);
               // Set state for last run.
-              $this->state->set(
-                'tasks.task_' . $task_id . '.last_run', $this->request_time
-              );
+              //moved to TaskBase
+//              $this->state->set(
+//                'tasks.task_' . $task_id . '.last_run', $this->request_time
+//              );
             }
           }
           catch (\Exception $e) {
