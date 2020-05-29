@@ -49,7 +49,6 @@ class TaskManager {
           try {
             if ($this->runTask($task_id)) {
               $this->schedule($task_id);
-//              error_log('Running task with ID: ' . $task_id);
               // Set state for last run.
               //moved to TaskBase
 //              $this->state->set(
