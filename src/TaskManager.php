@@ -49,7 +49,7 @@ class TaskManager {
           try {
             if ($this->runTask($task_id)) {
               $this->schedule($task_id);
-              error_log('Running task with ID: ' . $task_id);
+//              error_log('Running task with ID: ' . $task_id);
               // Set state for last run.
               //moved to TaskBase
 //              $this->state->set(
@@ -58,7 +58,7 @@ class TaskManager {
             }
           }
           catch (\Exception $e) {
-            error_log($e->getMessage());
+//            error_log($e->getMessage());
             Drupal::logger('dds_tasks')
               ->error(
                 'Could\'nt run task with id "' . $task_id . '" '
