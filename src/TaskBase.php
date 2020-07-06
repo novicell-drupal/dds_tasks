@@ -2,22 +2,24 @@
 
 namespace Drupal\dds_tasks;
 
-
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\State\State;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\State\StateInterface;
 
 abstract class TaskBase extends PluginBase implements TaskInterface, ContainerFactoryPluginInterface {
 
   /**
-   * @var State
+   * A state object, for storing plugin state.
+   *
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
   /**
+   * Runs the task and returns a boolean based on the result.
    *
    * @return bool
+   *   A boolean indicating if the task ran successfully.
    */
   public function run() {
     try {
@@ -25,32 +27,55 @@ abstract class TaskBase extends PluginBase implements TaskInterface, ContainerFa
       $this->task();
       $this->updateLastRun($start);
       return TRUE;
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       \Drupal::logger('dds_task')->error($e->getMessage());
       return FALSE;
     }
   }
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, State $state) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->state = $state;
+  /**
+   * Returns the plugin state name.
+   *
+   * @return string
+   *   Used for getting and setting plugin state.
+   */
+  protected function getPluginStateName(): string {
+    return 'tasks.task_' . $this->getPluginId() . '.last_run';
   }
 
+  /**
+   * Get the timstamp for when the task was last run.
+   *
+   * @return int|null
+   *   Returns a timestamp for last run or null.
+   */
   protected function getLastRun() {
-    return $this->state->get('tasks.task_'.$this->getPluginId().'.last_run');
+    return $this->getState()->get($this->getPluginStateName());
   }
 
+  /**
+   * Update the last updated run timestamp plugin state.
+   *
+   * @param int $time
+   *   The timestamp for last run.
+   */
   protected function updateLastRun($time) {
-    $this->state->set('tasks.task_'.$this->getPluginId().'.last_run', $time);
+    $this->getState()->set($this->getPluginStateName(), $time);
   }
 
-
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('state')
-    );
+  /**
+   * Get a state interface object, to handle the plugin state with.
+   *
+   * @return \Drupal\Core\State\StateInterface
+   *   A State object.
+   */
+  public function getState(): StateInterface {
+    if ($this->state === NULL) {
+      /** @var \Drupal\Core\State\StateInterface state */
+      $this->state = \Drupal::service('state');
+    }
+    return $this->state;
   }
+
 }
