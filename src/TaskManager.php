@@ -58,7 +58,7 @@ class TaskManager {
           }
           catch (\Exception $e) {
 //            error_log($e->getMessage());
-            Drupal::logger('dds_tasks')
+            \Drupal::logger('dds_tasks')
               ->error(
                 'Could\'nt run task with id "' . $task_id . '" '
                 . $e->getMessage()
