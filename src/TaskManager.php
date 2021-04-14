@@ -100,7 +100,7 @@ class TaskManager {
     $definition = $this->taskPluginManager->getDefinition($task_id);
     $interval = stripslashes($definition['interval']);
     if (!empty($interval)) {
-      $cron = CronExpression::factory($interval);
+      $cron = new CronExpression($interval);
       $this->taskPluginManager->setCacheItem(
         $task_id, $cron->getNextRunDate()
           ->getTimestamp()
