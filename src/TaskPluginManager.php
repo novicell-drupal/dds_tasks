@@ -55,7 +55,7 @@ class TaskPluginManager extends DefaultPluginManager {
 
     $tasks = [];
     foreach ($definitions as $key => $definition) {
-      $cron = CronExpression::factory(stripslashes($definition['interval']));
+      $cron = new CronExpression(stripslashes($definition['interval']));
       $tasks[$definition['id']] = $cron->getNextRunDate()->getTimestamp();
     }
 
