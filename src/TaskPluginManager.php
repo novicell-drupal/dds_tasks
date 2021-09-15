@@ -40,6 +40,8 @@ class TaskPluginManager extends DefaultPluginManager {
 
     if(!empty($cached)) {
       return $cached->data;
+    } else {
+      $this->setCachedTasks();
     }
     return [];
   }
