@@ -4,6 +4,7 @@
  * Implementing hook_cron
  */
 function dds_tasks_cron() {
+  /** @var \Drupal\dds_tasks\TaskManager $task_manager */
   $task_manager = \Drupal::service('tasks.manager');
   $task_manager->run();
 }
