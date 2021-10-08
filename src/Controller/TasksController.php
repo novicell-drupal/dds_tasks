@@ -52,7 +52,7 @@ class TasksController extends ControllerBase {
 
     foreach ($plugin_definitions as $key => $plugin_definition) {
       $last_run = \Drupal::state()->get('tasks.task_' . $plugin_definition['id'] . '.last_run', 0);
-      $next_run = $next_runs[$plugin_definition['id']] ?? time();
+      $next_run = $next_runs[$plugin_definition['id']] ?? NULL;
 
       $rows[] = [
         'id' => $plugin_definition['id'],
@@ -60,7 +60,7 @@ class TasksController extends ControllerBase {
         'description' => $plugin_definition['description'],
         'interval' => stripslashes($plugin_definition['interval']),
         'last_run' => $last_run ? $this->formatToDate($last_run) : '–',
-        'next_run' => $this->formatToDate($next_run),
+        'next_run' => empty($next_run) ? $this->t('Error') : $this->formatToDate($next_run),
         'state' => $this->state->get('tasks.task_' . $plugin_definition['id'] . '.state'),
         'actions' => Link::createFromRoute('Run', 'dds_tasks.run_task', ['task' => $plugin_definition['id']]),
       ];

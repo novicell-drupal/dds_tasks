@@ -38,12 +38,50 @@ class TaskPluginManager extends DefaultPluginManager {
   public function getTasks() {
     $cached = $this->taskCacheBackend->get($this->cacheKey . ':tasks');
 
-    if(!empty($cached)) {
-      return $cached->data;
-    } else {
-      $this->setCachedTasks();
+    $rebuild = FALSE;
+    if (empty($cached)) {
+      $rebuild = TRUE;
+    } elseif (!$this->checkCachedTasks($cached->data)) {
+      $rebuild = TRUE;
     }
-    return [];
+
+    if ($rebuild) {
+      $this->setCachedTasks();
+      $cached = $this->taskCacheBackend->get($this->cacheKey . ':tasks');
+    }
+    return $cached->data ?? [];
+  }
+
+  /**
+   * Check if the tasks list is correct.
+   *
+   * @param array $tasks
+   *   List of tasks.
+   *
+   * @return bool
+   *   TRUE if everything is fine, otherwise FALSE.
+   */
+  public function checkCachedTasks(array $tasks) {
+    $definitions = $this->getDefinitions();
+    $result = TRUE;
+    foreach ($definitions as $key => $definition) {
+      if (!isset($tasks[$definition['id']])) {
+        $result = FALSE;
+      }
+      if (!is_int($tasks[$definition['id']])) {
+        $result = FALSE;
+      }
+    }
+    if (!$result) {
+      $body = ['text' => 'Incorrect DDS Tasks cached data: ' . json_encode($tasks)];
+      \Drupal::httpClient()->post('https://hooks.slack.com/services/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', [
+        'headers' => [
+          'Content-type' => 'Content-type: application/json',
+        ],
+        'body' => json_encode($body),
+      ]);
+    }
+    return $result;
   }
 
   public function setCacheItem($id, $run_date) {
