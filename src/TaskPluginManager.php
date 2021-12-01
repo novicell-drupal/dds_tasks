@@ -72,15 +72,6 @@ class TaskPluginManager extends DefaultPluginManager {
         $result = FALSE;
       }
     }
-    if (!$result) {
-      $body = ['text' => 'Incorrect DDS Tasks cached data: ' . json_encode($tasks)];
-      \Drupal::httpClient()->post('https://hooks.slack.com/services/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', [
-        'headers' => [
-          'Content-type' => 'Content-type: application/json',
-        ],
-        'body' => json_encode($body),
-      ]);
-    }
     return $result;
   }
 
