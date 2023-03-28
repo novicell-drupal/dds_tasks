@@ -3,7 +3,7 @@
 namespace Drupal\dds_tasks\Event;
 
 use Drupal\dds_tasks\TaskInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class TaskEvent extends Event {
 
