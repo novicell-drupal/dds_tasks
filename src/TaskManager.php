@@ -16,7 +16,7 @@ class TaskManager {
 
   protected $state;
 
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * Scheduler constructor.
@@ -131,7 +131,7 @@ class TaskManager {
         break;
     }
     // Dispatch event.
-    $this->eventDispatcher->dispatch($event, new TaskEvent($id, $task));
+    $this->eventDispatcher->dispatch($event, get_class($event));
     $this->state->set($key, $message);
   }
 
