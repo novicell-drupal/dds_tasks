@@ -131,7 +131,7 @@ class TaskManager {
         break;
     }
     // Dispatch event.
-    $this->eventDispatcher->dispatch($event, get_class($event));
+    $this->eventDispatcher->dispatch(new TaskEvent($id, $task), $event);
     $this->state->set($key, $message);
   }
 
