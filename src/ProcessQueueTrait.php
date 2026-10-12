@@ -4,6 +4,7 @@ namespace Drupal\dds_tasks;
 
 use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Utility\Error;
 
 /**
  * Provides the services and methods needed to process a queue worker.
@@ -56,7 +57,7 @@ trait ProcessQueueTrait {
         // release the item and skip to the next queue.
         $queue->releaseItem($item);
 
-        watchdog_exception('dds_tasks', $e);
+        Error::logException(\Drupal::logger('dds_tasks'), $e);
 
         // Since we're only working on one queue type, we can't skip to next
         // queue, so stop processing altogether.
@@ -65,7 +66,7 @@ trait ProcessQueueTrait {
       catch (\Exception $e) {
         // In case of any other kind of exception, log it and leave the item
         // in the queue to be processed again later.
-        watchdog_exception('dds_tasks', $e);
+        Error::logException(\Drupal::logger('dds_tasks'), $e);
       }
     }
   }
